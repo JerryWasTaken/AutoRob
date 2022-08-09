@@ -141,10 +141,99 @@ function movement:move_to_position(part, cframe, speed, car, target_vehicle, tri
         task.wait();
 
         part.CFrame = CFrame.new(part.CFrame.X, y_level, part.CFrame.Z);
+
+        if target_vehicle and target_vehicle.Seat.Player.Value then -- if someone occupies the vehicle while we're moving to it, we need to move to the next vehicle
+            table.insert(tried_vehicles, target_vehicle);
+
+            local nearest_vehicle = utilities:get_nearest_vehicle(tried_vehicles);
+
+            if nearest_vehicle then 
+                movement:move_to_position(player.Character.HumanoidRootPart, nearest_vehicle.Seat.CFrame, 135, false, nearest_vehicle);
+            end;
+
+            return;
+        end;
     until (part.Position - higher_position).Magnitude < 10;
 
     part.CFrame = CFrame.new(part.Position.X, vector_position.Y, part.Position.Z);
     part.Velocity = Vector3.new(0, 0, 0);
+end;
+
+--// raycast filter
+
+dependencies.variables.raycast_params.FilterType = Enum.RaycastFilterType.Blacklist;
+dependencies.variables.raycast_params.FilterDescendantsInstances = {player.Character, workspace.Vehicles, workspace:FindFirstChild("Rain")};
+
+workspace.ChildAdded:Connect(function(child) -- if it starts raining, add rain to collision ignore list
+    if child.Name == "Rain" then 
+        table.insert(dependencies.variables.raycast_params.FilterDescendantsInstances, child);
+    end;
+end);
+
+player.CharacterAdded:Connect(function(character) -- when the player respawns, add character back to collision ignore list
+    table.insert(dependencies.variables.raycast_params.FilterDescendantsInstances, character);
+end);
+
+--// get free vehicles, owned helicopters, motorcycles and unsupported/new vehicles
+
+for index, vehicle_data in next, dependencies.modules.vehicle_data do
+    if vehicle_data.Type == "Heli" then -- helicopters
+        dependencies.helicopters[vehicle_data.Make] = true;
+    elseif vehicle_data.Type == "Motorcycle" then --- motorcycles
+        dependencies.motorcycles[vehicle_data.Make] = true;
+    end;
+
+    if vehicle_data.Type ~= "Chassis" and vehicle_data.Type ~= "Motorcycle" and vehicle_data.Type ~= "Heli" and vehicle_data.Type ~= "DuneBuggy" and vehicle_data.Make ~= "Volt" then -- weird vehicles that are not supported
+        dependencies.unsupported_vehicles[vehicle_data.Make] = true;
+    end;
+    
+    if not vehicle_data.Price then -- free vehicles
+        dependencies.free_vehicles[vehicle_data.Make] = true;
+    end;
+end;
+
+--// get all positions near a door which have no collision above them
+
+for index, value in next, workspace:GetChildren() do
+    if value.Name:sub(-4, -1) == "Door" then 
+        local touch_part = value:FindFirstChild("Touch");
+
+        if touch_part and touch_part:IsA("BasePart") then
+            for distance = 5, 100, 5 do 
+                local forward_position, backward_position = touch_part.Position + touch_part.CFrame.LookVector * (distance + 3), touch_part.Position + touch_part.CFrame.LookVector * -(distance + 3); -- distance + 3 studs forward and backward from the door
+                
+                if not workspace:Raycast(forward_position, dependencies.variables.up_vector, dependencies.variables.raycast_params) then -- if there is nothing above the forward position from the door
+                    table.insert(dependencies.door_positions, {instance = value, position = forward_position});
+
+                    break;
+                elseif not workspace:Raycast(backward_position, dependencies.variables.up_vector, dependencies.variables.raycast_params) then -- if there is nothing above the backward position from the door
+                    table.insert(dependencies.door_positions, {instance = value, position = backward_position});
+
+                    break;
+                end;
+            end;
+        end;
+    end;
+end;
+
+--// no damage and ragdoll 
+
+local old_fire_server = getupvalue(network.FireServer, 1);
+setupvalue(network.FireServer, 1, function(key, ...)
+    if key == keys.Damage then 
+        return;
+    end;
+
+    return old_fire_server(key, ...);
+end);
+
+local old_is_point_in_tag = dependencies.modules.player_utils.isPointInTag;
+dependencies.modules.player_utils.isPointInTag = function(point, tag)
+    if tag == "NoRagdoll" or tag == "NoFallDamage" then 
+        return true;
+    end;
+    
+    return old_is_point_in_tag(point, tag);
 end;
 
 function AutoRob.MakeNotification(txt, time)
