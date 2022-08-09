@@ -283,7 +283,7 @@ for i,v in pairs(game:GetService("Workspace").Vehicles:GetChildren()) do
         if nearest_vehicle.Seat.PlayerName.Value ~= player.Name then -- if it failed to enter, try a new car
                     table.insert(tried, nearest_vehicle);
 
-                    return tp3(cframe, tried or {nearest_vehicle});
+                    return AutoRob.FarmTP(cframe, tried or {nearest_vehicle});
                 end;
                     break
                 end
