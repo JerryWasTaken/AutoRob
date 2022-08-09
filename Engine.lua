@@ -393,9 +393,9 @@ for i,v in pairs(game:GetService("Workspace").Vehicles:GetChildren()) do
                     --movement:move_to_position(v.PrimaryPart, cframe, dependencies.variables.vehicle_speed);
                 else
                     --movement:move_to_position(nearest_vehicle.PrimaryPart, cframe, dependencies.variables.vehicle_speed);
-                    nearest_vehicle.PrimaryPart.CFrame = v.PrimaryPart.CFrame + Vector3.new(0, 500, 0)
+                    v.PrimaryPart.CFrame = v.PrimaryPart.CFrame + Vector3.new(0, 500, 0)
                     vtp(v.PrimaryPart, cframe + Vector3.new(0, 500, 0))
-                    nearest_vehicle.PrimaryPart.CFrame = nearest_vehicle.PrimaryPart.CFrame + Vector3.new(0, -500, 0)
+                    v.PrimaryPart.CFrame = v.PrimaryPart.CFrame + Vector3.new(0, -500, 0)
                     --G_17_(cframe)
                     task.wait(0.15);
                     for _,d in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
@@ -426,6 +426,69 @@ for i,v in pairs(game:GetService("Workspace").Vehicles:GetChildren()) do
             end
         end
     end
+end
+
+function AutoRob.CarTP(cframe)
+    local relative_position = (cframe.Position - player.Character.HumanoidRootPart.Position);
+    local target_distance = relative_position.Magnitude;
+
+    if target_distance <= 20 and not workspace:Raycast(player.Character.HumanoidRootPart.Position, relative_position.Unit * target_distance, dependencies.variables.raycast_params) then 
+        player.Character.HumanoidRootPart.CFrame = cframe; 
+        
+        return;
+    end; 
+
+    local tried = tried or {};
+    local nearest_vehicle = utilities:get_nearest_vehicle(tried);
+
+    if nearest_vehicle then 
+        local vehicle_distance = (nearest_vehicle.Seat.Position - player.Character.HumanoidRootPart.Position).Magnitude; 
+
+        if target_distance < vehicle_distance then -- if target position is closer than the nearest vehicle
+            movement:move_to_position(player.Character.HumanoidRootPart, cframe, dependencies.variables.player_speed);
+        else 
+            if nearest_vehicle.Seat.PlayerName.Value ~= player.Name then
+                movement:move_to_position(player.Character.HumanoidRootPart, nearest_vehicle.Seat.CFrame, dependencies.variables.player_speed, false, nearest_vehicle, tried);
+
+                local enter_attempts = 1;
+
+                repeat -- attempt to enter car
+                    network:FireServer(keys.EnterCar, nearest_vehicle, nearest_vehicle.Seat);
+                    
+                    enter_attempts = enter_attempts + 1;
+
+                    task.wait(0.1);
+                until enter_attempts == 10 or nearest_vehicle.Seat.PlayerName.Value == player.Name;
+
+                if nearest_vehicle.Seat.PlayerName.Value ~= player.Name then -- if it failed to enter, try a new car
+                    table.insert(tried, nearest_vehicle);
+
+                    return teleport(cframe, tried or {nearest_vehicle});
+                end;
+            end;
+
+            local vehicle_root_part; -- inline conditional would be way too long
+
+            if dependencies.helicopters[nearest_vehicle.Name] then -- each type of vehicle has a different root part, which is why we sort them so we can do this
+                vehicle_root_part = nearest_vehicle.Model.TopDisc;
+            elseif dependencies.motorcycles[nearest_vehicle.Name] then 
+                vehicle_root_part = nearest_vehicle.CameraVehicleSeat;
+            elseif nearest_vehicle.Name == "DuneBuggy" then 
+                vehicle_root_part = nearest_vehicle.BoundingBox;
+            else 
+                vehicle_root_part = nearest_vehicle.PrimaryPart;
+            end;
+
+           vehicle_root_part.CFrame = vehicle_root_part.CFrame + Vector3.new(0, 500, 0)
+           vtp(vehicle_root_part, cframe + Vector3.new(0, 500, 0))
+           vehicle_root_part.CFrame = vehicle_root_part.PrimaryPart.CFrame + Vector3.new(0, -500, 0)
+
+            repeat -- attempt to exit car
+                task.wait(0.15);
+                network:FireServer(keys.ExitCar);
+            until nearest_vehicle.Seat.PlayerName.Value ~= player.Name;
+        end;
+    end;	
 end
 
 function AutoRob.Punch()
