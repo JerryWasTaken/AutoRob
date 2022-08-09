@@ -286,7 +286,7 @@ local function vtp(part, ic)
 	--workspace.Gravity = lc
 end
 
-function AutoRob.FarmTP(cframe)
+function AutoRob.FarmTP(cframe,ExitCar)
     local tried = tried or {};
     local nearest_vehicle = utilities:get_nearest_vehicle(tried);
     
