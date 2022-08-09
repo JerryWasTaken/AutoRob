@@ -305,3 +305,5 @@ function AutoRob.Punch()
     local punch_function = getupvalue(default_actions.punchButton.onPressed, 1).attemptPunch;
     punch_function()
 end
+
+return AutoRob
