@@ -259,6 +259,33 @@ function AutoRob.Teleport(cframe)
     movement:move_to_position(player.Character.HumanoidRootPart, cframe, dependencies.variables.player_speed); 
 end
 
+local Q = {}
+local S = false
+local R = Vector3.new()
+
+
+--P = game:GetService("Players").LocalPlayer.Character.Humanoid
+
+local function vtp(part, ic)
+	--P:SetStateEnabled("FallingDown", false)
+	local jc = (ic - ic.p) + part.Position + Vector3.new(0, 4, 0)
+	local kc = ic.p - part.Position
+	local lc = workspace.Gravity
+	--workspace.Gravity = 0
+	for mc = 0, kc.Magnitude, 17.3 do
+		if S then
+			break
+		end
+		part.CFrame = jc + kc.Unit * mc
+		part.Velocity, part.RotVelocity = R, R
+		wait()
+	end
+	if not S then
+		part.CFrame = ic
+	end
+	--workspace.Gravity = lc
+end
+
 function AutoRob.FarmTP(cframe)
     local tried = tried or {};
     local nearest_vehicle = utilities:get_nearest_vehicle(tried);
