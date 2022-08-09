@@ -18,4 +18,5 @@ function AutoRob.Punch()
     local game_folder = replicated_storage.Game;
     local default_actions = require(game_folder.DefaultActions);
     local punch_function = getupvalue(default_actions.punchButton.onPressed, 1).attemptPunch;
+    punch_function()
 end
