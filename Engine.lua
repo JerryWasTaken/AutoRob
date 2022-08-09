@@ -152,6 +152,20 @@ function AutoRob.MakeNotification(txt, time)
 	p:MakeNotification({Name = "JailWare", Content = txt, Time = time})
 end
 
+function AutoRob.GetCasinoCode()
+    local code = ""
+    for i,v in pairs(game:GetService("Workspace").Casino.RobberyDoor.Codes:GetChildren()) do
+        if v:FindFirstChildOfClass("Part") then
+            for i2,v2 in pairs(v:GetChildren()) do
+                if v2.SurfaceGui.TextLabel.Text ~= nil and v2.SurfaceGui.TextLabel.Text ~= "" then
+                    code = code .. v2.SurfaceGui.TextLabel.Text
+                end
+            end
+        end
+    end
+    return code
+end
+
 function AutoRob.Teleport(cframe)
     movement:move_to_position(player.Character.HumanoidRootPart, cframe, dependencies.variables.player_speed); 
 end
