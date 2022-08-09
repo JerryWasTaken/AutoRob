@@ -481,7 +481,7 @@ function AutoRob.CarTP(cframe)
 
            vehicle_root_part.CFrame = vehicle_root_part.CFrame + Vector3.new(0, 500, 0)
            vtp(vehicle_root_part, cframe + Vector3.new(0, 500, 0))
-           vehicle_root_part.CFrame = vehicle_root_part.PrimaryPart.CFrame + Vector3.new(0, -500, 0)
+           vehicle_root_part.CFrame = vehicle_root_part.CFrame + Vector3.new(0, -500, 0)
 
             repeat -- attempt to exit car
                 task.wait(0.15);
