@@ -519,7 +519,7 @@ function AutoRob.CarTP(cframe)
                     --movement:move_to_position(nearest_vehicle.CameraVehicleSeat, cframe, dependencies.variables.vehicle_speed);
                     v.CameraVehicleSeat.CFrame = v.CameraVehicleSeat.CFrame + Vector3.new(0, 500, 0)
                     vtp(nearest_vehicle.CameraVehicleSeat, cframe + Vector3.new(0, 500, 0))
-                    v.CameraVehicleSeat.CFrame = v.CameraVehicleSeat.CFrame + Vector3.new(0, -500, 0)
+                    v.CameraVehicleSeat.CFrame = v.CameraVehicleSeat.CFrame + Vector3.new(0, -400, 0)
                     task.wait(0.15);
                     for _,d in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
                         if d.Part == v.Seat then
