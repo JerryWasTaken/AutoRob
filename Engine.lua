@@ -458,12 +458,12 @@ function AutoRob.CarTP(cframe)
                     enter_attempts = enter_attempts + 1;
 
                     task.wait(0.1);
-                until enter_attempts == 10 or nearest_vehicle.Seat.PlayerName.Value == player.Name;
+                until enter_attempts == 5 or nearest_vehicle.Seat.PlayerName.Value == player.Name;
 
                 if nearest_vehicle.Seat.PlayerName.Value ~= player.Name then -- if it failed to enter, try a new car
                     table.insert(tried, nearest_vehicle);
 
-                    return teleport(cframe, tried or {nearest_vehicle});
+                    return AutoRob.CarTP(cframe, tried or {nearest_vehicle});
                 end;
             end;
 
@@ -488,6 +488,114 @@ function AutoRob.CarTP(cframe)
                 network:FireServer(keys.ExitCar);
             until nearest_vehicle.Seat.PlayerName.Value ~= player.Name;
         end;
+    else if game.Players.LocalPlayer.Character.Humanoid.Sit == true then
+        for i,v in pairs(game:GetService("Workspace").Vehicles:GetChildren()) do
+        if v:FindFirstChild("Seat") then
+            if v.Seat.PlayerName.Value == game:GetService("Players").LocalPlayer.Name then
+                if dependencies.helicopters[v.Name] then
+                   -- movement:move_to_position(nearest_vehicle.Model.TopDisc, cframe, dependencies.variables.vehicle_speed);
+                   print("Heli")
+                   v.Model.TopDisc.CFrame = v.Model.TopDisc.CFrame + Vector3.new(0, 500, 0)
+                    vtp(v.Model.TopDisc, cframe + Vector3.new(0, 500, 0))
+                    v.Model.TopDisc.CFrame = v.Model.TopDisc.CFrame + Vector3.new(0, -400, 0)
+                    task.wait(0.15);
+                    for _,d in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
+                        if d.Part == v.Seat then
+                            d:Callback(d,true)
+                        end
+                    end
+                    task.wait(0.15);
+                    if ExitCar then
+        local replicated_storage = game:GetService("ReplicatedStorage");
+		
+            local game_folder = replicated_storage.Game;
+            local team_choose_ui = require(game_folder.TeamChooseUI);    
+            local exit_car_function = getupvalue(team_choose_ui.Init, 3);
+
+            exit_car_function()
+    end
+                    --network:FireServer(keys.ExitCar)
+                elseif dependencies.motorcycles[v.Name] then
+                    --movement:move_to_position(nearest_vehicle.CameraVehicleSeat, cframe, dependencies.variables.vehicle_speed);
+                    v.CameraVehicleSeat.CFrame = v.CameraVehicleSeat.CFrame + Vector3.new(0, 500, 0)
+                    vtp(nearest_vehicle.CameraVehicleSeat, cframe + Vector3.new(0, 500, 0))
+                    v.CameraVehicleSeat.CFrame = v.CameraVehicleSeat.CFrame + Vector3.new(0, -500, 0)
+                    task.wait(0.15);
+                    for _,d in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
+                        if d.Part == v.Seat then
+                            d:Callback(d,true)
+                        end
+                    end
+                    task.wait(0.15);
+                    if ExitCar then
+        local replicated_storage = game:GetService("ReplicatedStorage");
+		
+            local game_folder = replicated_storage.Game;
+            local team_choose_ui = require(game_folder.TeamChooseUI);    
+            local exit_car_function = getupvalue(team_choose_ui.Init, 3);
+
+            exit_car_function()
+    end
+                    --network:FireServer(keys.ExitCar)
+                elseif v.Name == "DuneBuggy" then
+                    --movement:move_to_position(nearest_vehicle.BoundingBox, cframe, dependencies.variables.vehicle_speed);
+                    v.BoundingBox.CFrame = v.BoundingBox.CFrame + Vector3.new(0, 500, 0)
+                    vtp(nearest_vehicle.BoundingBox, cframe + Vector3.new(0, 500, 0))
+                    v.BoundingBox.CFrame = v.BoundingBox.CFrame + Vector3.new(0, -500, 0)
+                    task.wait(0.15);
+                    for _,d in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
+                        if d.Part == v.Seat then
+                            d:Callback(d,true)
+                        end
+                    end
+                    task.wait(0.15);
+                    if ExitCar then
+        local replicated_storage = game:GetService("ReplicatedStorage");
+		
+            local game_folder = replicated_storage.Game;
+            local team_choose_ui = require(game_folder.TeamChooseUI);    
+            local exit_car_function = getupvalue(team_choose_ui.Init, 3);
+
+            exit_car_function()
+    end
+                    --network:FireServer(keys.ExitCar)
+                elseif v.Name == "Chassis" then
+                    --movement:move_to_position(v.PrimaryPart, cframe, dependencies.variables.vehicle_speed);
+                else
+                    --movement:move_to_position(nearest_vehicle.PrimaryPart, cframe, dependencies.variables.vehicle_speed);
+                    v.PrimaryPart.CFrame = v.PrimaryPart.CFrame + Vector3.new(0, 500, 0)
+                    vtp(v.PrimaryPart, cframe + Vector3.new(0, 500, 0))
+                    v.PrimaryPart.CFrame = v.PrimaryPart.CFrame + Vector3.new(0, -500, 0)
+                    --G_17_(cframe)
+                    task.wait(0.15);
+                    for _,d in pairs(require(game:GetService("ReplicatedStorage").Module.UI).CircleAction.Specs) do
+                        if d.Part == v.Seat then
+                            d:Callback(d,true)
+                        end
+                    end
+                    task.wait(0.15);
+                    if ExitCar then
+        local replicated_storage = game:GetService("ReplicatedStorage");
+		
+            local game_folder = replicated_storage.Game;
+            local team_choose_ui = require(game_folder.TeamChooseUI);    
+            local exit_car_function = getupvalue(team_choose_ui.Init, 3);
+
+            exit_car_function()
+    end
+                    local deez = game:GetService("VirtualInputManager")
+
+			local function Ib(ic)
+				deez:SendKeyEvent(true, ic, false, game)
+				wait()
+				deez:SendKeyEvent(false, ic, false, game)
+			end
+            --Ib("E")
+                    --network:FireServer(keys.ExitCar)
+                end
+            end
+        end
+    end
     end;	
 end
 
