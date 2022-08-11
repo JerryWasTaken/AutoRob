@@ -499,4 +499,13 @@ function AutoRob.Punch()
     punch_function()
 end
 
+local function Qb(mc)
+    return tonumber((tostring(mc):gsub("%D", "")))
+end
+
+function AutoRob.MaxMoney()
+    local mc, nc = game.Players.LocalPlayer.PlayerGui.RobberyMoneyGui.Container.Bottom.Progress.Amount.Text:match("(.-)/(.+)")
+    return game.Players.LocalPlayer.PlayerGui.RobberyMoneyGui.Enabled and mc and nc and Qb(mc) >= Qb(nc)
+end
+
 return AutoRob
