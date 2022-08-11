@@ -268,7 +268,7 @@ local R = Vector3.new()
 
 local function vtp(part, ic)
 	--P:SetStateEnabled("FallingDown", false)
-	local jc = (ic - ic.p) + part.Position + Vector3.new(0, 4, 0)
+	local jc = (ic - ic.p) + part.Position + Vector3.new(0, 0, 0)
 	local kc = ic.p - part.Position
 	local lc = workspace.Gravity
 	--workspace.Gravity = 0
