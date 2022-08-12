@@ -596,7 +596,8 @@ function AutoRob.CarTP(cframe)
             end
         end
     end
-    end;	
+    end;
+end
 end
 
 function AutoRob.Punch()
