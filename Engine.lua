@@ -441,7 +441,7 @@ function AutoRob.CarTP(cframe)
     local tried = tried or {};
     local nearest_vehicle = utilities:get_nearest_vehicle(tried);
 
-    if nearest_vehicle then 
+    if game.Players.LocalPlayer.Character.Humanoid.Sit == false then 
         local vehicle_distance = (nearest_vehicle.Seat.Position - player.Character.HumanoidRootPart.Position).Magnitude; 
 
         if target_distance < vehicle_distance then -- if target position is closer than the nearest vehicle
