@@ -2275,13 +2275,7 @@ function ab()
                         break
                     end
                     local Police = game.Teams.Police:GetPlayers()
-                    if (Police.PrimaryPart.CFrame - Nb.Door.Hinge).Magnitude > 100 then
-                        Tb(CFrame.new(44.8027611, 60.2341843, 925.830383) + Vector3.new(0, 5, 0))
-                        Tb(CFrame.new(37.8139915, 60.2341881, 895.217529) + Vector3.new(0, 5, 0))
-                        Tb(CFrame.new(57.5389671, 60.2341843, 886.989746) + Vector3.new(0, 5, 0))
-                        Tb(CFrame.new(53.7243156, 60.2341843, 863.99054) + Vector3.new(0, 5, 0))
-                        Tb(CFrame.new(32.7206306, 60.2341843, 862.579102) + Vector3.new(0, 5, 0))
-                    end
+                
                 until Rb()
             else
                 repeat
@@ -2293,13 +2287,13 @@ function ab()
                     if game.Players.LocalPlayer.Team == "Prisoner" then
                         break
                     end
-                    if (Police.PrimaryPart.CFrame - Nb.Door.Hinge).Magnitude > 100 then
+                    --[[if (Police.PrimaryPart.CFrame - Nb.Door.Hinge).Magnitude > 100 then
                         Tb(CFrame.new(44.8027611, 60.2341843, 925.830383) + Vector3.new(0, 5, 0))
                         Tb(CFrame.new(37.8139915, 60.2341881, 895.217529) + Vector3.new(0, 5, 0))
                         Tb(CFrame.new(57.5389671, 60.2341843, 886.989746) + Vector3.new(0, 5, 0))
                         Tb(CFrame.new(53.7243156, 60.2341843, 863.99054) + Vector3.new(0, 5, 0))
                         Tb(CFrame.new(32.7206306, 60.2341843, 862.579102) + Vector3.new(0, 5, 0))
-                    end
+                    end--]]
                 until Rb()
             end
             Main:updateButton(Status, "Bank | Selling")
